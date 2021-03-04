@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {TypeOrmModuleOptions} from "@nestjs/typeorm";
+import {TypeOrmModuleOptions, TypeOrmOptionsFactory} from "@nestjs/typeorm";
 /**
- * Service dealing with app config based operations.
+ * Service dealing with database config based operations.
  *
  * @class
  */
 @Injectable()
-export class DatabaseConfigService {
+export class DatabaseConfigService implements TypeOrmOptionsFactory{
     constructor(private configService: ConfigService) {}
 
     get postgresHost(): string {
@@ -32,7 +32,7 @@ export class DatabaseConfigService {
     public isProduction() {
         return this.mode != 'development';
     }
-    public getTypeOrmConfig(): TypeOrmModuleOptions {
+    public createTypeOrmOptions(): TypeOrmModuleOptions {
         return {
             type: 'postgres',
 
@@ -55,4 +55,6 @@ export class DatabaseConfigService {
             ssl: this.isProduction(),
         };
     }
+
+
 }
